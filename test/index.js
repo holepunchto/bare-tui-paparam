@@ -1,0 +1,5 @@
+require('./introspect.test')
+require('./fields.test')
+require('./menu.test')
+require('./help-overlay.test')
+require('./security.test')

@@ -1,0 +1,44 @@
+{
+  "name": "bare-tui-paparam",
+  "version": "0.0.1",
+  "description": "menu/form helper for any paparam CLI",
+  "main": "index.js",
+  "exports": {
+    "./package": "./package.json",
+    ".": "./index.js"
+  },
+  "files": [
+    "package.json",
+    "index.js",
+    "lib",
+    "examples",
+    "README.md"
+  ],
+  "dependencies": {
+    "bare-tui": "^0.0.3",
+    "bare-tui-form": "^0.0.2",
+    "bare-tui-markdown": "^0.0.1",
+    "paparam": "^1.10.1"
+  },
+  "devDependencies": {
+    "brittle": "^3.19.0",
+    "lunte": "^1.2.0",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0"
+  },
+  "scripts": {
+    "format": "prettier --write . && lunte --fix",
+    "lint": "prettier --check . && lunte",
+    "test": "brittle-bare test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holepunchto/bare-tui-paparam.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-tui-paparam/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-tui-paparam"
+}
