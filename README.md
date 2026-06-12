@@ -4,42 +4,15 @@
 
 ![Orbital Example](assets/show.gif)
 
-```
-   mytool --menu
-        │
-        ▼
-   ┌──────────────┐   pick a command   ┌───────────────┐
-   │  command     │ ─────────────────▶ │ bare-tui-form │ ──▶ fill it in
-   │  picker      │                    │  (hardened)   │
-   │ (filterable) │                    └───────────────┘
-   └──────────────┘                            │
-                                               ▼
-              cmd.parse(argv, { run:false })   ← paparam validates; no runner fires
-                      │
-                      ▼
-        onComplete(result, { argv })   ← result is paparam's parse() shape
-```
+See [`examples/orbital-menu.js`](examples/orbital-menu.js) for a large multi-command tool exercising every field type.
+
+> [!NOTE]
+> This an experimental library. A version 1.0.0 release will signal stability.
 
 The forms are generated from your **real** flag/arg metadata (a flag with `.choices()` becomes a picker, a boolean becomes a checkbox, defaults are prefilled, repeatables become editable lists). The argv it assembles is run through **your own command** with `{ run: false }` — so paparam itself validates it (unknown flag, missing arg, bad choice, your own `validate()` checks) and yields the canonical result **without executing your runner** until you say so.
 
 Built on [bare-tui] and [bare-tui-form] (forms from JSON Schema, rendered through its hardening).
 
-## Want AI assist?
-
-Install the optional **[`bare-tui-paparam-ai`]** package. It **re-exports everything here** and adds:
-
-- **`--find`** — type your goal in plain language; one AI call routes it to the right command, then shows that command's form.
-- **`--hi`** — full agentic assist: the model curates which fields to ask and drip-feeds questions.
-- **AI-backed in-form help** — press F1 / ctrl+k mid-form to ask a question.
-
-Upgrading is a **one-line import change** — your `--menu` / `runMenu` code keeps working unchanged:
-
-```js
-// before — no network
-const { isMenuMode, runMenu } = require('bare-tui-paparam')
-// after — AI tiers light up; menu code is untouched
-const { isMenuMode, runMenu, isInteractiveHelp, runWithConfirm } = require('bare-tui-paparam-ai')
-```
 
 ## Install
 
@@ -73,7 +46,6 @@ if (isMenuMode(Bare.argv)) {
 }
 ```
 
-Run it: `bare mytool.js --menu`. See [`examples/orbital-menu.js`](examples/orbital-menu.js) for a large multi-command tool exercising every field type.
 
 ## Entry points
 
@@ -95,6 +67,22 @@ Run it: `bare mytool.js --menu`. See [`examples/orbital-menu.js`](examples/orbit
 - `onComplete` — `(result, { argv }) => any`, runs after the TUI exits instead of
   the default `command.parse`.
 
+## Want AI assist?
+
+Install the optional **[`bare-tui-paparam-ai`]** package. It **re-exports everything here** and adds:
+
+- **`--find`** — type your goal in plain language; one AI call routes it to the right command, then shows that command's form.
+- **`--hi`** — full agentic assist: the model curates which fields to ask and drip-feeds questions.
+- **AI-backed in-form help** — press F1 / ctrl+k mid-form to ask a question.
+
+Upgrading is a **one-line import change** — your `--menu` / `runMenu` code keeps working unchanged:
+
+```js
+// before — no network
+const { isMenuMode, runMenu } = require('bare-tui-paparam')
+// after — AI tiers light up; menu code is untouched
+const { isMenuMode, runMenu, isInteractiveHelp, runWithConfirm } = require('bare-tui-paparam-ai')
+```
 [paparam]: https://github.com/holepunchto/paparam
 [bare-tui]: https://github.com/holepunchto/bare-tui
 [bare-tui-form]: https://github.com/holepunchto/bare-tui-form
