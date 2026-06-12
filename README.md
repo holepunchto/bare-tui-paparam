@@ -2,6 +2,8 @@
 
 **A menu/form helper for any [paparam] CLI.** Your tool already describes its whole surface in paparam — flags, args, subcommands, choices, defaults, descriptions. Add one line and `mytool --menu` drops the user into a filterable command picker, then a **real terminal form** for the command they chose, and finishes by handing you a result in the **exact shape paparam's `parse()` returns**.
 
+![Orbital Example](assets/show.gif)
+
 ```
    mytool --menu
         │
