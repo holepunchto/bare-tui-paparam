@@ -1,6 +1,6 @@
 {
   "name": "bare-tui-paparam",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "menu/form helper for any paparam CLI",
   "main": "index.js",
   "exports": {
