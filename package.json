@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "bare-tui": "^0.0.3",
-    "bare-tui-form": "^0.0.2",
+    "bare-tui-form": "^0.0.3",
     "bare-tui-markdown": "^0.0.1",
     "paparam": "^1.10.1"
   },
