@@ -13,7 +13,6 @@ The forms are generated from your **real** flag/arg metadata (a flag with `.choi
 
 Built on [bare-tui] and [bare-tui-form] (forms from JSON Schema, rendered through its hardening).
 
-
 ## Install
 
 ```sh
@@ -45,7 +44,6 @@ if (isMenuMode(Bare.argv)) {
   cmd.parse(Bare.argv.slice(2)) // the normal CLI
 }
 ```
-
 
 ## Entry points
 
@@ -83,6 +81,7 @@ const { isMenuMode, runMenu } = require('bare-tui-paparam')
 // after — AI tiers light up; menu code is untouched
 const { isMenuMode, runMenu, isInteractiveHelp, runWithConfirm } = require('bare-tui-paparam-ai')
 ```
+
 [paparam]: https://github.com/holepunchto/paparam
 [bare-tui]: https://github.com/holepunchto/bare-tui
 [bare-tui-form]: https://github.com/holepunchto/bare-tui-form
