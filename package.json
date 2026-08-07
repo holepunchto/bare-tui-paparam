@@ -16,9 +16,9 @@
   ],
   "dependencies": {
     "bare-tui": "^0.0.3",
-    "bare-tui-form": "github:RaisinTen/bare-tui-form#support-inverse-options",
+    "bare-tui-form": "^0.0.4",
     "bare-tui-markdown": "^0.0.1",
-    "paparam": "github:holepunchto/paparam#support-inverse-options"
+    "paparam": "^1.11.0"
   },
   "devDependencies": {
     "brittle": "^3.19.0",
