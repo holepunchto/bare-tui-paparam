@@ -15,8 +15,6 @@ jobs:
     steps:
       - uses: holepunchto/actions/node-base@v1
       - run: npm run lint
-        with:
-          allow-git: root
   test:
     strategy:
       matrix:
