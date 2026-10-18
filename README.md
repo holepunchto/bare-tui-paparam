@@ -61,6 +61,7 @@ if (isMenuMode(Bare.argv)) {
 - `validators` — `{ <flag-or-arg name>: (value, { values }) => err | null }`.
 - `validateSubmission` — `(result) => err | null`, the final whole-submission gate.
 - `fieldHelp` — `{ <flag-or-arg name>: 'a note' }`. Drives the offline per-field help (F1 / ctrl+k shows the note for the focused field). You can also author these on the command itself with paparam's `.hint('…')`.
+- `groups` — section a busy menu: `[{ title, description?, help?, collapsed?, commands: ['launch', 'cargo load'] }]`. Commands are menu labels (the subcommand path); any you don't list land in a trailing "Other" group. Headers are navigable — enter (or ←/→) collapses/expands, the help keys show the group's `help` (markdown). Filtering (`/`) searches every group, collapsed or not.
 - `helpKeys` — override the help keys (default `['f1', 'ctrl+k']`).
 - `onComplete` — `(result, { argv }) => any`, runs after the TUI exits instead of
   the default `command.parse`.

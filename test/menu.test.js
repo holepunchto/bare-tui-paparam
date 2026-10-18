@@ -181,3 +181,130 @@ test('MenuApp: single-command tool skips the menu', (t) => {
   t.is(app.state, 'forming', 'went straight to the form')
   t.absent(app.menu, 'no menu built')
 })
+
+// ── groups ─────────────────────────────────────────────────────────────────
+
+const key = (name, extra = {}) =>
+  new KeyMsg({ name, sequence: '', ctrl: false, meta: false, shift: false, ...extra })
+
+function groupedFixture() {
+  return command(
+    'fleet',
+    command('launch', arg('<vehicle>', 'hull'), () => {}),
+    command('dock', arg('<station>', 'station'), () => {}),
+    command('scan', arg('<target>', 'target'), () => {}),
+    command('report', () => {})
+  )
+}
+
+function groupedApp(groups) {
+  const cmd = groupedFixture()
+  const app = new MenuApp({ command: cmd, catalog: catalog(cmd), toolName: 'fleet', groups })
+  app.update({ type: 'resize', width: 70, height: 24 })
+  return app
+}
+
+const GROUPS = [
+  { title: 'Flight', description: 'fly', help: 'flight help', commands: ['launch', 'dock'] },
+  { title: 'Sensors', commands: ['scan'] }
+]
+
+const rowLabels = (menu) =>
+  menu.rows.map((r) => (r.type === 'header' ? '#' + r.group.title : r.item.label))
+
+test('groups: headers + commands, unclaimed commands land in Other', (t) => {
+  const app = groupedApp(GROUPS)
+  t.alike(rowLabels(app.menu), [
+    '#Flight',
+    'launch',
+    'dock',
+    '#Sensors',
+    'scan',
+    '#Other',
+    'report'
+  ])
+  t.ok(app.menu.selectedGroup(), 'cursor starts on the first header')
+  t.ok(app.view().includes('Flight'), 'header rendered')
+})
+
+test('groups: enter on a header collapses/expands; arrows walk headers too', (t) => {
+  const app = groupedApp(GROUPS)
+  app.update(enter())
+  t.alike(rowLabels(app.menu), ['#Flight', '#Sensors', 'scan', '#Other', 'report'], 'collapsed')
+  t.is(app.state, 'menu', 'still on the menu')
+  app.update(key('down'))
+  t.is(app.menu.selectedGroup().title, 'Sensors', 'down from a collapsed header → next header')
+  app.update(key('up'))
+  app.update(key('right'))
+  t.alike(rowLabels(app.menu).slice(0, 3), ['#Flight', 'launch', 'dock'], 'right expands')
+  app.update(key('down'))
+  app.update(key('left'))
+  t.is(app.menu.selectedGroup().title, 'Flight', 'left on a command jumps to its header')
+})
+
+test('groups: enter on a command opens its form', (t) => {
+  const app = groupedApp(GROUPS)
+  app.update(key('down'))
+  app.update(enter())
+  t.is(app.state, 'forming')
+  t.is(app._pending.item.label, 'launch')
+})
+
+test('groups: help key on a header opens the group help; esc returns', (t) => {
+  const app = groupedApp(GROUPS)
+  app.update(key('f1'))
+  t.ok(app.help, 'help open')
+  t.ok(app.view().includes('flight help'), 'shows the group help')
+  app.update(key('escape', { sequence: '\x1b' }))
+  t.absent(app.help, 'closed')
+  t.is(app.state, 'menu', 'back on the menu')
+  // A header without help ignores the key.
+  app.update(enter()) // collapse Flight
+  app.update(key('down')) // → Sensors
+  app.update(key('f1'))
+  t.absent(app.help, 'no help for Sensors')
+})
+
+test('groups: filtering ignores collapse and skips headers', (t) => {
+  const app = groupedApp([{ ...GROUPS[0], collapsed: true }, GROUPS[1]])
+  t.alike(rowLabels(app.menu), ['#Flight', '#Sensors', 'scan', '#Other', 'report'])
+  app.update(key('/', { sequence: '/' }))
+  for (const ch of 'doc') app.update(key(ch, { sequence: ch }))
+  t.alike(rowLabels(app.menu), ['#Flight', 'dock'], 'only matching group shown, expanded')
+  t.is(app.menu.selectedItem().label, 'dock', 'cursor on the match, not the header')
+})
+
+test('groups: the cursor stays in view on a short screen through collapse/expand', (t) => {
+  const { cmd, menuOpts } = require('../examples/orbital-menu.js')
+  const app = new MenuApp({
+    command: cmd,
+    catalog: catalog(cmd),
+    toolName: 'orbital',
+    groups: menuOpts.groups
+  })
+  app.update({ type: 'resize', width: 70, height: 11 })
+  const m = app.menu
+  const inView = () =>
+    m.selected >= m.offset &&
+    m.selected < m.offset + m.height &&
+    m.offset <= Math.max(0, m.rows.length - m.height)
+  let ok = true
+  for (let i = 0; i < m.rows.length + 2; i++) {
+    app.update(key('down'))
+    ok = ok && inView()
+  }
+  // Up to the Sensors header, collapse it, expand it, then back to the top.
+  while (m.selectedGroup() === null || m.selectedGroup().title !== 'Sensors & comms') {
+    app.update(key('up'))
+  }
+  app.update(enter())
+  ok = ok && inView()
+  app.update(key('right'))
+  ok = ok && inView()
+  for (let i = 0; i < m.rows.length + 2; i++) {
+    app.update(key('up'))
+    ok = ok && inView()
+  }
+  t.ok(ok, 'cursor always within the visible window, no dead space at the bottom')
+  t.is(m.offset, 0, 'scrolled back to the top')
+})
