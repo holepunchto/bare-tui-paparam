@@ -170,6 +170,38 @@ function runner(label) {
 // (`fieldHelp` here ADDS notes for fields without a `.hint()`; the `.hint()`s above
 // cover fuel/orbit/channel. Both feed the offline F1 / ctrl+k help.)
 const menuOpts = {
+  // Section the menu. Headers are navigable: enter (or ←/→) collapses a group,
+  // F1 / ctrl+k on a header shows its help. Unlisted commands land in "Other".
+  groups: [
+    {
+      title: 'Flight',
+      description: 'get a hull up, over there, and docked',
+      help:
+        'Most missions run **launch → navigate → dock**, in that order.\n\n' +
+        '- `launch` gets the vehicle off the pad\n' +
+        '- `navigate` plots the course and waypoints\n' +
+        '- `dock` brings her into a station or vessel',
+      commands: ['launch', 'navigate', 'dock']
+    },
+    {
+      title: 'Freight',
+      description: 'move cargo in and out of the holds',
+      help: 'Load before you launch, unload after you dock. Hazmat needs a manifest.',
+      commands: ['cargo load', 'cargo unload']
+    },
+    {
+      title: 'Sensors & comms',
+      description: 'safe to run any time',
+      help: 'Scans and transmissions never change the flight state.',
+      commands: ['scan', 'comms']
+    },
+    {
+      title: 'Admin',
+      description: 'reports and paperwork',
+      collapsed: true,
+      commands: ['report']
+    }
+  ],
   uiSchema: {
     flightPlan: { 'ui:widget': 'file' },
     manifest: { 'ui:widget': 'file' }
