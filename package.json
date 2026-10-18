@@ -1,6 +1,6 @@
 {
   "name": "bare-tui-paparam",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "menu/form helper for any paparam CLI",
   "main": "index.js",
   "exports": {
@@ -16,9 +16,9 @@
   ],
   "dependencies": {
     "bare-tui": "^0.0.3",
-    "bare-tui-form": "^0.0.3",
+    "bare-tui-form": "^0.0.4",
     "bare-tui-markdown": "^0.0.1",
-    "paparam": "^1.10.1"
+    "paparam": "^1.12.0"
   },
   "devDependencies": {
     "brittle": "^3.19.0",
